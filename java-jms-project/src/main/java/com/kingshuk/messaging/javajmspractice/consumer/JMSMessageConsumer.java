@@ -1,6 +1,5 @@
 package com.kingshuk.messaging.javajmspractice.consumer;
 
-
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
@@ -12,42 +11,37 @@ import com.kingshuk.messaging.javajmspractice.commonconfig.JMSSessionBuilder;
 
 public class JMSMessageConsumer {
 
-    public static void main(String[] args) {
-        try {
+	public static void main(String[] args) {
+		try {
 
-            JMSSessionBuilder sessionBuilder = new JMSSessionBuilder();
-            QueueSession session = sessionBuilder.getSession();
-            Queue queue = sessionBuilder.getQueue();
-            QueueConnection queueConnection = sessionBuilder.getQueueConnection();
+			JMSSessionBuilder sessionBuilder = new JMSSessionBuilder();
+			QueueSession session = sessionBuilder.getSession();
+			Queue queue = sessionBuilder.getQueue();
+			QueueConnection queueConnection = sessionBuilder.getQueueConnection();
 
-            queueConnection.start();
+			queueConnection.start();
 
+			receiveMessage(session, queue);
 
-            receiveMessage(session, queue);
+			queueConnection.stop();
 
+			session.close();
 
-            queueConnection.stop();
+		} catch (JMSException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-            session.close();
+	private static void receiveMessage(QueueSession session, Queue queue) {
 
-        } catch (JMSException ex) {
-            ex.printStackTrace();
-        }
-    }
+		try (MessageConsumer consumer = session.createConsumer(queue);) {
 
+			TextMessage message = (TextMessage) consumer.receive();
 
-    private static void receiveMessage(QueueSession session, Queue queue) {
+			System.out.println("Message received from the sender is \n" + message);
 
-        try {
-            MessageConsumer consumer = session.createConsumer(queue);
-
-            TextMessage message = (TextMessage) consumer.receive();
-
-            System.out.println("Message received from the sender is \n" + message);
-
-            consumer.close();
-        } catch (JMSException ex) {
-            ex.printStackTrace();
-        }
-    }
+		} catch (JMSException ex) {
+			ex.printStackTrace();
+		}
+	}
 }
