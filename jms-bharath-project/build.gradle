@@ -23,6 +23,7 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/org.projectlombok/lombok
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	
 	// https://mvnrepository.com/artifact/org.apache.activemq/artemis-jms-client-all
 	compile group: 'org.apache.activemq', name: 'artemis-jms-client-all', version: '2.13.0'
