@@ -1,5 +1,6 @@
 package com.kingshuk.messaging.routing;
 
+import com.kingshuk.messaging.util.RabbitMQUtils;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
@@ -8,8 +9,7 @@ import java.util.concurrent.TimeoutException;
 
 public class RoutingMessageReceiver {
     public static void main(String[] args) throws IOException, TimeoutException {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        ConnectionFactory connectionFactory = RabbitMQUtils.getConnectionFactory();
         Connection connection = connectionFactory.newConnection();
         Channel channel = connection.createChannel();
 

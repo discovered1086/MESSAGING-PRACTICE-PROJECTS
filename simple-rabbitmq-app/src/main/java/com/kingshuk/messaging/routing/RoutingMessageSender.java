@@ -1,5 +1,6 @@
 package com.kingshuk.messaging.routing;
 
+import com.kingshuk.messaging.util.RabbitMQUtils;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -11,21 +12,19 @@ import java.util.concurrent.TimeoutException;
 
 public class RoutingMessageSender {
 
-    public static void main(String[] args) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
-
+    public static void main(String[] args) throws IOException, TimeoutException {
+        ConnectionFactory connectionFactory = RabbitMQUtils.getConnectionFactory();
         try (Connection connection = connectionFactory.newConnection();
              Channel channel = connection.createChannel();) {
             channel.exchangeDeclare("routing_logs", BuiltinExchangeType.DIRECT);
 
-            extracted(channel,
+            sendMessage(channel,
                     "Hello from Kingshuk. I'm in the routing - info zone....!!",
                     "Info");
-            extracted(channel,
+            sendMessage(channel,
                     "Hello from Kingshuk. I'm in the routing - Warning zone....!!",
                     "Warning");
-            extracted(channel,
+            sendMessage(channel,
                     "Hello from Kingshuk. I'm in the routing - Error zone....!!",
                     "Error");
         } catch (TimeoutException | IOException e) {
@@ -33,9 +32,9 @@ public class RoutingMessageSender {
         }
     }
 
-    private static void extracted(Channel channel,
-                                  String message,
-                                  String routingKey) throws IOException {
+    private static void sendMessage(Channel channel,
+                                    String message,
+                                    String routingKey) throws IOException {
 
         channel.basicPublish("routing_logs", routingKey, null,
                 message.getBytes(StandardCharsets.UTF_8));
