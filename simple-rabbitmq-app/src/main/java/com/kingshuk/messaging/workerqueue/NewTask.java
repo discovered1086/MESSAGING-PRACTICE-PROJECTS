@@ -1,5 +1,6 @@
 package com.kingshuk.messaging.workerqueue;
 
+import com.kingshuk.messaging.util.RabbitMQUtils;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -11,8 +12,7 @@ import java.util.concurrent.TimeoutException;
 public class NewTask {
 
     public static void main(String[] args) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        ConnectionFactory connectionFactory = RabbitMQUtils.getConnectionFactory();
 
         try (Connection connection = connectionFactory.newConnection();
              Channel channel = connection.createChannel();) {
