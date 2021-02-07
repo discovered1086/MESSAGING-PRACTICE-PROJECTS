@@ -1,5 +1,6 @@
 package com.kingshuk.messaging.pubsub;
 
+import com.kingshuk.messaging.util.RabbitMQUtils;
 import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -12,8 +13,7 @@ import java.util.concurrent.TimeoutException;
 public class PubSubMessageSender {
 
     public static void main(String[] args) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        ConnectionFactory connectionFactory = RabbitMQUtils.getConnectionFactory();
 
         try (Connection connection = connectionFactory.newConnection();
              Channel channel = connection.createChannel();) {
