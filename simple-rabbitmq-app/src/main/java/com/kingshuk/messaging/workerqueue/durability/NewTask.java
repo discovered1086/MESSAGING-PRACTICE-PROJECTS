@@ -20,9 +20,11 @@ public class NewTask {
 
             channel.queueDeclare("durableQueue", true, false, false, null);
             String message = String.join(" ", args);
+
             channel.basicPublish("", "durableQueue",
                     MessageProperties.PERSISTENT_TEXT_PLAIN,
                     message.getBytes(StandardCharsets.UTF_8));
+
             System.out.println(" [x] Sent '" + message + "'");
         } catch (TimeoutException | IOException e) {
             e.printStackTrace();
