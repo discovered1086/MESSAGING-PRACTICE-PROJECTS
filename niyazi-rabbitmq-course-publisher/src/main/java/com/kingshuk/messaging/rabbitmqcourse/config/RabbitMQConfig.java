@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.kingshuk.messaging.rabbitmqcourse.model.RabbitMQProperties;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
-import org.springframework.amqp.rabbit.connection.CachingConnectionFactory.CacheMode;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,25 +35,51 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue studentScoreQueue() {
+        return QueueBuilder
+                .durable(STUDENT_SCORE_QUEUE)
+                //.autoDelete()
+                //.exclusive()
+                .build();
+    }
+
+    @Bean
     public DirectExchange directExchange() {
         return new DirectExchange(DEFAULT_DIRECT, true, false);
     }
 
     @Bean
-    public Binding myBindings(DirectExchange exchange, Queue queue) {
+    public DirectExchange studentExchange(){
+        return ExchangeBuilder.directExchange(STUDENT_DIRECT)
+                .durable(true)
+                //.autoDelete()
+                .build();
+    }
+
+    @Bean
+    public Binding myBindings(@Qualifier("directExchange") DirectExchange exchange,
+                              @Qualifier("studentQueue") Queue queue) {
         return BindingBuilder.bind(queue)
                 .to(exchange)
                 .with(STUDENT_ROUTING_KEY);
     }
 
     @Bean
-    public ConnectionFactory rabbitMQConnectionFactory(RabbitMQProperties rabbitMQProperties){
-        CachingConnectionFactory connectionFactory= new CachingConnectionFactory();
+    public Binding studentBindings(@Qualifier("studentExchange") DirectExchange exchange,
+                              @Qualifier("studentScoreQueue") Queue queue) {
+        return BindingBuilder.bind(queue)
+                .to(exchange)
+                .with(STUDENT_ROUTING_KEY);
+    }
+
+    @Bean
+    public ConnectionFactory rabbitMQConnectionFactory(RabbitMQProperties rabbitMQProperties) {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
         connectionFactory.setHost(rabbitMQProperties.getHost());
         connectionFactory.setPort(rabbitMQProperties.getPort());
         connectionFactory.setUsername(rabbitMQProperties.getUsername());
         connectionFactory.setPassword(rabbitMQProperties.getPassword());
-        connectionFactory.setCacheMode(CacheMode.CONNECTION);
+        //connectionFactory.setCacheMode(CacheMode.CHANNEL);
         return connectionFactory;
     }
 

@@ -15,8 +15,6 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
-@PropertySource("classpath:rabbitmq.properties")
-@EnableConfigurationProperties(RabbitMQProperties.class)
 public class RabbitMQConfig {
 
     @Bean
@@ -25,17 +23,6 @@ public class RabbitMQConfig {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         return objectMapper;
-    }
-
-    @Bean
-    public ConnectionFactory rabbitMQConnectionFactory(RabbitMQProperties rabbitMQProperties){
-        CachingConnectionFactory connectionFactory= new CachingConnectionFactory();
-        connectionFactory.setHost(rabbitMQProperties.getHost());
-        connectionFactory.setPort(rabbitMQProperties.getPort());
-        connectionFactory.setUsername(rabbitMQProperties.getUsername());
-        connectionFactory.setPassword(rabbitMQProperties.getPassword());
-        connectionFactory.setCacheMode(CacheMode.CONNECTION);
-        return connectionFactory;
     }
 
     @Bean

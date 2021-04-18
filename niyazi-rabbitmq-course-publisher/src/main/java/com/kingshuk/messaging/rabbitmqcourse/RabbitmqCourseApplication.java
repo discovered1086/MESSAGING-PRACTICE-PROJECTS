@@ -20,6 +20,7 @@ public class RabbitmqCourseApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws JsonProcessingException {
         //publisher.publishMessage();
-        publisher.publishObjectMessage();
+        //publisher.publishObjectMessage();
+        publisher.publishStudentScoreMessage();
     }
 }

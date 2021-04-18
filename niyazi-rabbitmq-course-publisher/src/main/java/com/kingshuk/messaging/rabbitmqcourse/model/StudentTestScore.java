@@ -6,15 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Student implements Serializable{
-
-    private String name;
-    private long studentId;
-    private List<StudentTestScore> testScore;
+public class StudentTestScore implements Serializable{
+    private String semester;
+    private double testScore;
 }
