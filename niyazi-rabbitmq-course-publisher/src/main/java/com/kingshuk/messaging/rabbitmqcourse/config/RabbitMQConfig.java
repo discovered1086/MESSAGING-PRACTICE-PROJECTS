@@ -57,6 +57,33 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public TopicExchange employeeExchange(){
+        return ExchangeBuilder.topicExchange(EMPLOYEE_TOPIC)
+                .durable(true)
+                .autoDelete()
+                .internal()
+                .build();
+    }
+
+    @Bean
+    public FanoutExchange notificationExchange(){
+        return ExchangeBuilder.fanoutExchange(NOTIFICATION_EXCHANGE)
+                .durable(true)
+                .autoDelete()
+                .internal()
+                .build();
+    }
+
+    @Bean
+    public HeadersExchange headersExchange(){
+        return ExchangeBuilder.headersExchange(HEADERS_EXCHANGE)
+                .durable(true)
+                .autoDelete()
+                .internal()
+                .build();
+    }
+
+    @Bean
     public Binding myBindings(@Qualifier("directExchange") DirectExchange exchange,
                               @Qualifier("studentQueue") Queue queue) {
         return BindingBuilder.bind(queue)
