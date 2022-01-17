@@ -1,5 +1,5 @@
 spring:
   rabbitmq:
     addresses: localhost:5672
-    username: guest
-    password: guest
+    username: discovered1086
+    password: Iofdtiger#16
