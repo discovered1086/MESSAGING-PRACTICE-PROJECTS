@@ -7,20 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-//@Component
-public class FixedRateMessageProducer {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private static final String QUEUE_NAME = "timotius.fixed-rate";
+@Component
+public class QuickRateMessageProducer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuickRateMessageProducer.class);
+    private static final String QUEUE_NAME = "timotius.multi-consumer-fixed-rate";
 
-    //@Autowired
+    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     private int counter = 0;
 
-    //@Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 500)
     public void sendMessage(){
         counter++;
-        logger.info("The counter value is {}",counter);
+        LOGGER.info("Multiple consumer check: the counter value is {}",counter);
         rabbitTemplate.convertAndSend(QUEUE_NAME, counter);
     }
 }

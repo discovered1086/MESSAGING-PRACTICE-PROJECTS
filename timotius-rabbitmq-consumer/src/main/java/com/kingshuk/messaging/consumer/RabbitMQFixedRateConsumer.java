@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RabbitMQFixedRateConsumer {
-    private final Logger logger= LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER= LoggerFactory.getLogger(RabbitMQFixedRateConsumer.class);
 
     @RabbitListener(queues = "timotius.fixed-rate")
     public void readMessage(String message){
-        logger.info("The counter value is: {}", message);
+        LOGGER.info("The counter value is: {}", message);
     }
 }
